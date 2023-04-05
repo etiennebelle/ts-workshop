@@ -562,10 +562,15 @@ const user = new (0, _user.User)({
     name: "Etienne",
     age: 27
 });
-user.on("change", ()=>{});
-user.on("change", ()=>{});
-user.on("click", ()=>{});
-console.log(user);
+user.on("change", ()=>{
+    console.log("Change #1");
+});
+user.on("change", ()=>{
+    console.log("Change #2");
+});
+user.on("save", ()=>{
+    console.log("Save was triggered");
+});
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -583,10 +588,17 @@ class User {
         Object.assign(this.data, dataUpdate);
     }
     on(eventName, callback) {
-        /* []: User initalisé avec une propriété events qui est un objet vide, retournera undefined 
+        /* this.events[eventName] || []: User initalisé avec une propriété events qui est un objet vide, retournera undefined 
         Assigner un tableau vide à handlers jusqu'à ce qu'eventName soit défini */ const handlers = this.events[eventName] || [];
         handlers.push(callback);
         this.events[eventName] = handlers;
+    }
+    trigger(eventName) {
+        const handlers = this.events[eventName];
+        if (!handlers || handlers.length === 0) return;
+        handlers.forEach((callback)=>{
+            callback();
+        });
     }
 }
 
