@@ -1,5 +1,5 @@
 import axios, { AxiosPromise, AxiosResponse } from "axios"
-import { UserProps } from './User';
+/* import { UserProps } from "./User" => Avant d'utiliser un type Générique */
 
 interface HasID {
     id?: number
@@ -11,7 +11,8 @@ export class Sync<T extends HasID> {
     fetch(id: number): AxiosPromise {
         return axios.get(`${this.rootUrl}/${id}`)
     }
-
+    
+    /* save(data: UserProps): AxiosPromise => Avant d'utiliser un type Générique */
     save(data: T): AxiosPromise {
         const { id } = data;
 
