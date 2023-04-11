@@ -5,7 +5,8 @@ type Callback = () => void
 export class Eventing {
     events: { [key: string]: Callback[] } = {};
 
-    on(eventName: string, callback: Callback): void {
+    /* Bound(arrow) function (cf 'Attributes.ts' l.5/6) */
+    on = (eventName: string, callback: Callback): void => {
         /* this.events[eventName] || []: User initalisé avec une propriété events qui est un objet vide, retournera undefined 
         Assigner un tableau vide à handlers jusqu'à ce qu'eventName soit défini */
         const handlers = this.events[eventName] || []
@@ -13,7 +14,7 @@ export class Eventing {
         this.events[eventName] = handlers
     }
 
-    trigger(eventName: string): void {
+    trigger = (eventName: string): void => {
         const handlers = this.events[eventName];
 
         if (!handlers || handlers.length === 0) {

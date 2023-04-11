@@ -559,21 +559,22 @@ function hmrAccept(bundle, id) {
 },{}],"h7u1C":[function(require,module,exports) {
 var _user = require("./models/User");
 const user = new (0, _user.User)({
-    name: "NEW USER",
+    id: 1,
+    name: "ETIENNE",
     age: 28
 });
-// Petit rappel sur les "accesseurs"
+user.on("save", ()=>{
+    console.log(user);
+});
+user.save(); /* // Petit rappel sur les "accesseurs"
 class Person {
-    constructor(firstName, lastName){
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-    get fullName() {
-        return `${this.firstName} ${this.lastName}`;
-    }
+    constructor(public firstName: string, public lastName: string) { }
+    get fullName(): string {return `${this.firstName} ${this.lastName}`}
 }
-const person = new Person("Etienne", "Bell\xe9");
-console.log(person.fullName) /* Ici on ne fait qu'une référence à fullName, le getter s'occupe d'invoquer la fonction donc on omet les ()*/ ;
+
+const person = new Person('Etienne', 'Bellé')
+console.log(person.fullName)
+/* Ici on ne fait qu'une référence à fullName, le getter s'occupe d'invoquer la fonction donc on omet les ()*/ 
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -590,14 +591,35 @@ class User {
         this.attributes = new (0, _attributes.Attributes)(attrs);
     }
     // Events
-    on() {}
-    trigger() {}
+    get on() {
+        return this.events.on;
+    }
+    get trigger() {
+        return this.events.trigger;
+    }
     // Attributes
-    get() {}
-    set() {}
+    get get() {
+        return this.attributes.get;
+    }
+    set(update) {
+        this.attributes.set(update);
+        this.events.trigger("change");
+    }
     // Sync
-    fetch() {}
-    save() {}
+    fetch() {
+        const id = this.attributes.get("id");
+        if (typeof id !== "number") throw new Error("Cannot fetch without an ID");
+        this.sync.fetch(id).then((res)=>{
+            this.attributes.set(res.data);
+        });
+    }
+    save() {
+        this.sync.save(this.attributes.getAll()).then((res)=>{
+            this.trigger("save");
+        }).catch(()=>{
+            this.trigger("error");
+        });
+    }
 }
 
 },{"./Eventing":"7459s","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Sync":"QO3Gl","./Attributes":"6Bbds"}],"7459s":[function(require,module,exports) {
@@ -607,19 +629,19 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Eventing", ()=>Eventing);
 class Eventing {
     events = {};
-    on(eventName, callback) {
+    /* Bound(arrow) function (cf 'Attributes.ts' l.5/6) */ on = (eventName, callback)=>{
         /* this.events[eventName] || []: User initalisé avec une propriété events qui est un objet vide, retournera undefined 
         Assigner un tableau vide à handlers jusqu'à ce qu'eventName soit défini */ const handlers = this.events[eventName] || [];
         handlers.push(callback);
         this.events[eventName] = handlers;
-    }
-    trigger(eventName) {
+    };
+    trigger = (eventName)=>{
         const handlers = this.events[eventName];
         if (!handlers || handlers.length === 0) return;
         handlers.forEach((callback)=>{
             callback();
         });
-    }
+    };
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
@@ -4799,9 +4821,12 @@ parcelHelpers.export(exports, "Attributes", ()=>Attributes);
 class Attributes {
     constructor(data){
         this.data = data;
-    }
-    get(key) {
-        return this.data[key];
+        this./* Bound function (arrow function) */ /* On évite les problèmes de contexte avec this: 'this' fera toujours référence à l'instance d'"attributes" */ get = (key)=>{
+            return this.data[key];
+        };
+        this.getAll = ()=>{
+            return this.data;
+        };
     }
     set(dataUpdate) {
         Object.assign(this.data, dataUpdate);

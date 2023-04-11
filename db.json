@@ -2,23 +2,18 @@
   "users": [
     {
       "id": 1,
-      "name": "NEW ETIENNE",
-      "age": 27
+      "name": "ETIENNE",
+      "age": 28
     },
     {
-      "events": {
-        "events": {}
-      },
-      "sync": {
-        "rootUrl": "http://localhost:3000/users"
-      },
-      "attributes": {
-        "data": {
-          "name": "NEW USER",
-          "age": 28
-        }
-      },
-      "id": 2
+      "id": 2,
+      "name": "NEW USER",
+      "age": 0
+    },
+    {
+      "id": 3,
+      "name": "NEW USER",
+      "age": 0
     }
   ]
 }
