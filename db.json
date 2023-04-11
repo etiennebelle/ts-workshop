@@ -2,18 +2,13 @@
   "users": [
     {
       "id": 1,
-      "name": "ETIENNE",
-      "age": 28
-    },
-    {
-      "id": 2,
-      "name": "NEW USER",
+      "name": "newer name",
       "age": 0
     },
     {
-      "id": 3,
-      "name": "NEW USER",
-      "age": 0
+      "name": "new record",
+      "age": 0,
+      "id": 2
     }
   ]
 }
