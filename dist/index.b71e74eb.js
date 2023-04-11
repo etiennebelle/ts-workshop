@@ -560,9 +560,20 @@ function hmrAccept(bundle, id) {
 var _user = require("./models/User");
 const user = new (0, _user.User)({
     name: "NEW USER",
-    age: 0
+    age: 28
 });
-console.log(user);
+// Petit rappel sur les "accesseurs"
+class Person {
+    constructor(firstName, lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
+}
+const person = new Person("Etienne", "Bell\xe9");
+console.log(person.fullName) /* Ici on ne fait qu'une référence à fullName, le getter s'occupe d'invoquer la fonction donc on omet les ()*/ ;
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -578,6 +589,15 @@ class User {
     constructor(attrs){
         this.attributes = new (0, _attributes.Attributes)(attrs);
     }
+    // Events
+    on() {}
+    trigger() {}
+    // Attributes
+    get() {}
+    set() {}
+    // Sync
+    fetch() {}
+    save() {}
 }
 
 },{"./Eventing":"7459s","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Sync":"QO3Gl","./Attributes":"6Bbds"}],"7459s":[function(require,module,exports) {
