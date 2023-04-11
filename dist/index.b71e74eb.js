@@ -570,22 +570,17 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "User", ()=>User);
 var _eventing = require("./Eventing");
 var _sync = require("./Sync");
+var _attributes = require("./Attributes");
 const ROOT_URL = "http://localhost:3000/users";
 class User {
-    constructor(data){
-        this.data = data;
-        this.events = new (0, _eventing.Eventing)();
-        this.sync = new (0, _sync.Sync)(ROOT_URL);
-    }
-    get(propName) {
-        return this.data[propName];
-    }
-    set(dataUpdate) {
-        Object.assign(this.data, dataUpdate);
+    events = new (0, _eventing.Eventing)();
+    sync = new (0, _sync.Sync)(ROOT_URL);
+    constructor(attrs){
+        this.attributes = new (0, _attributes.Attributes)(attrs);
     }
 }
 
-},{"./Eventing":"7459s","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Sync":"QO3Gl"}],"7459s":[function(require,module,exports) {
+},{"./Eventing":"7459s","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Sync":"QO3Gl","./Attributes":"6Bbds"}],"7459s":[function(require,module,exports) {
 /* Créer un alias de type pour indiquer que callback est de type fonction 
 qui ne prend pas d'arguments et ne retourne aucune valeur */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -4776,6 +4771,22 @@ Object.entries(HttpStatusCode).forEach(([key, value])=>{
     HttpStatusCode[value] = key;
 });
 exports.default = HttpStatusCode;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6Bbds":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Attributes", ()=>Attributes);
+class Attributes {
+    constructor(data){
+        this.data = data;
+    }
+    get(key) {
+        return this.data[key];
+    }
+    set(dataUpdate) {
+        Object.assign(this.data, dataUpdate);
+    }
+}
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["3LmCz","h7u1C"], "h7u1C", "parcelRequire2d1f")
 
