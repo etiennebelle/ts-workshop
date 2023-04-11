@@ -582,10 +582,10 @@ var _model = require("./Model");
 var _attributes = require("./Attributes");
 var _apiSync = require("./ApiSync");
 var _eventing = require("./Eventing");
-const rootUrl = "http://localhost:3000/users";
+const ROOT_URL = "http://localhost:3000/users";
 class User extends (0, _model.Model) {
     static buildUser(attrs) {
-        return new User(new (0, _attributes.Attributes)(attrs), new (0, _eventing.Eventing)(), new (0, _apiSync.ApiSync)(rootUrl));
+        return new User(new (0, _attributes.Attributes)(attrs), new (0, _eventing.Eventing)(), new (0, _apiSync.ApiSync)(ROOT_URL));
     }
 }
 
@@ -598,15 +598,13 @@ class Model {
         this.attributes = attributes;
         this.events = events;
         this.sync = sync;
-    }
-    get on() {
-        return this.events.on;
-    }
-    get trigger() {
-        return this.events.trigger;
-    }
-    get get() {
-        return this.attributes.get;
+        this./* Syntaxe alternative uniquement si l'on n'initialise pas les propriétés sur une ligne plus haut (185)
+    (*** events: Eventing = new Eventing() ***) */ // get on() {  return this.events.on; }
+        on = this.events.on;
+        this.// get trigger() { return this.events.trigger; }
+        trigger = this.events.trigger;
+        this.// get get() { return this.attributes.get; }
+        get = this.attributes.get;
     }
     set(update) {
         this.attributes.set(update);
@@ -692,8 +690,8 @@ class ApiSync {
     }
     save(data) {
         const { id  } = data;
-        if (id) return (0, _axiosDefault.default).put(`${this.rootUrl}/${id}`, data);
-        else return (0, _axiosDefault.default).post(this.rootUrl, data);
+        if (id) /* UPDATE */ return (0, _axiosDefault.default).put(`${this.rootUrl}/${id}`, data);
+        else /* CREATE */ return (0, _axiosDefault.default).post(this.rootUrl, data);
     }
 }
 

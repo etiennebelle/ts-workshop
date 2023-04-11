@@ -1,4 +1,4 @@
-import axios, { AxiosPromise, AxiosResponse } from "axios"
+import axios, { AxiosPromise } from "axios"
 /* import { UserProps } from "./User" => Avant d'utiliser un type Générique */
 
 interface HasId {
@@ -16,8 +16,10 @@ export class ApiSync<T extends HasId> {
       const { id } = data;
   
       if (id) {
+        /* UPDATE */
         return axios.put(`${this.rootUrl}/${id}`, data);
       } else {
+        /* CREATE */
         return axios.post(this.rootUrl, data);
       }
     }

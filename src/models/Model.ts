@@ -27,17 +27,14 @@ interface ModelAttributes<T> {
       private sync: Sync<T>
     ) {}
     
-    get on() {
-        return this.events.on;
-    }
-    
-    get trigger() {
-        return this.events.trigger;
-    }
-
-    get get() {
-        return this.attributes.get;
-    }
+    /* Syntaxe alternative uniquement si l'on n'initialise pas les propriétés sur une ligne plus haut (185)
+    (*** events: Eventing = new Eventing() ***) */
+    // get on() {  return this.events.on; }
+    on = this.events.on
+    // get trigger() { return this.events.trigger; }
+    trigger = this.events.trigger
+    // get get() { return this.attributes.get; }
+    get = this.attributes.get
     
     set(update: T): void {
         this.attributes.set(update);

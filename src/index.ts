@@ -18,4 +18,3 @@ class Person {
 const person = new Person('Etienne', 'Bellé')
 console.log(person.fullName)
 /* Ici on ne fait qu'une référence à fullName, le getter s'occupe d'invoquer la fonction donc on omet les ()*/
-
