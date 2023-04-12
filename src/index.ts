@@ -1,20 +1,8 @@
-import { User } from './models/User';
+import { Collection } from "./models/Collection";
 
-const user = User.buildUser({ id: 1 });
+const collection = new Collection('http://localhost:3000/users')
+collection.on('change', () => {
+  console.log(collection)
+})
+collection.fetch();
 
-user.on('change', () => {
-  console.log(user);
-});
-
-user.fetch();
-
-
-/* // Petit rappel sur les "accesseurs"
-class Person {
-    constructor(public firstName: string, public lastName: string) { }
-    get fullName(): string {return `${this.firstName} ${this.lastName}`}
-}
-
-const person = new Person('Etienne', 'Bellé')
-console.log(person.fullName)
-/* Ici on ne fait qu'une référence à fullName, le getter s'occupe d'invoquer la fonction donc on omet les ()*/
