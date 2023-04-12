@@ -1,8 +1,11 @@
 import { Collection } from "./models/Collection";
+import { User, UserProps } from './models/User'
 
-const collection = new Collection('http://localhost:3000/users')
-collection.on('change', () => {
-  console.log(collection)
+const userCollection = User.buildUserCollection();
+
+userCollection.on('change', () => {
+  console.log(userCollection)
 })
-collection.fetch();
+
+userCollection.fetch();
 
