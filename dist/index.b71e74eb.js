@@ -557,67 +557,67 @@ function hmrAccept(bundle, id) {
 }
 
 },{}],"h7u1C":[function(require,module,exports) {
-var _userForm = require("./views/UserForm");
+var _userEdit = require("./views/UserEdit");
 var _user = require("./models/User");
 const user = (0, _user.User).buildUser({
-    id: 1,
-    name: "ETIENNE",
-    age: 197
+    name: "Mon nom",
+    age: 0
 });
 const root = document.getElementById("root");
 if (root) {
-    const userForm = new (0, _userForm.UserForm)(root, user);
-    userForm.render();
+    const userEdit = new (0, _userEdit.UserEdit)(root, user);
+    userEdit.render();
+    console.log(userEdit);
 } else throw new Error("Root element not found");
 
-},{"./views/UserForm":"gXSLD","./models/User":"4rcHn"}],"gXSLD":[function(require,module,exports) {
+},{"./views/UserEdit":"3CihC","./models/User":"4rcHn"}],"3CihC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "UserForm", ()=>UserForm);
-class UserForm {
+parcelHelpers.export(exports, "UserEdit", ()=>UserEdit);
+var _view = require("./View");
+var _userForm = require("./UserForm");
+var _userShow = require("./UserShow");
+class UserEdit extends (0, _view.View) {
+    regionsMap() {
+        return {
+            userShow: ".user-show",
+            userForm: ".user-form"
+        };
+    }
+    onRender() {
+        // On imbrique ici!
+        new (0, _userShow.UserShow)(this.regions.userShow, this.model).render();
+        new (0, _userForm.UserForm)(this.regions.userForm, this.model).render();
+    }
+    template() {
+        return `
+            <div class="user-show"></div>
+            <div class="user-form"></div>
+        `;
+    }
+}
+
+},{"./View":"5Vo78","./UserForm":"gXSLD","./UserShow":"2Tlyi","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5Vo78":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "View", ()=>View);
+class View {
     constructor(parent, model){
         this.parent = parent;
         this.model = model;
-        this.onSetNameClick = ()=>{
-            const input = this.parent.querySelector("input");
-            const name = input.value;
-            this.model.set({
-                name
-            });
-        };
-        this.onSetAgeClick = ()=>{
-            this.model.setRandomAge();
-        };
+        this.regions = {};
         this.bindModel();
+    }
+    eventsMap() {
+        return {};
+    }
+    regionsMap() {
+        return {};
     }
     bindModel() {
         this.model.on("change", ()=>{
             this.render();
         });
-    }
-    eventsMap() {
-        return {
-            "click:.set-name": this.onSetNameClick,
-            "click:.set-age": this.onSetAgeClick
-        };
-    }
-    template() {
-        return `
-            <div>
-                <h1>User Form</h1>
-                <div>
-                    <div>User's name: ${this.model.get("name")}</div>
-                    <div>User's age: ${this.model.get("age")}</div>
-                </div>
-                <div>
-                    <input />
-                    <button class="set-name">Change Name</button>
-                </div>
-                <div>
-                    <button class="set-age">Set Random Age</button>
-                </div>
-            </div>
-        `;
     }
     bindEvents(fragment) {
         const eventsMap = this.eventsMap();
@@ -628,11 +628,26 @@ class UserForm {
             });
         }
     }
+    mapRegions(fragment) {
+        const regionsMap = this.regionsMap();
+        for(let key in regionsMap){
+            const selector = regionsMap[key];
+            this.regions[key] = fragment.querySelector(selector);
+        /* 
+            const element = fragment.querySelector(selector)
+            if (element) {
+                this.regions[key] = element
+            } */ }
+    }
+    /* 211 - View nesting */ // Pour faire disparaitre l'erreur, on va overwrite cette fonction dans UserEdit.ts
+    onRender() {}
     render() {
         this.parent.innerHTML = "";
         const templateElement = document.createElement("template");
         templateElement.innerHTML = this.template();
         this.bindEvents(templateElement.content);
+        this.mapRegions(templateElement.content);
+        this.onRender();
         this.parent.append(templateElement.content);
     }
 }
@@ -667,7 +682,62 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"4rcHn":[function(require,module,exports) {
+},{}],"gXSLD":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "UserForm", ()=>UserForm);
+var _view = require("./View");
+class UserForm extends (0, _view.View) {
+    eventsMap() {
+        return {
+            "click:.set-name": this.onSetNameClick,
+            "click:.set-age": this.onSetAgeClick,
+            "click:.save-model": this.onSaveClick
+        };
+    }
+    onSetNameClick = ()=>{
+        const input = this.parent.querySelector("input");
+        const name = input.value;
+        this.model.set({
+            name
+        });
+    };
+    onSetAgeClick = ()=>{
+        this.model.setRandomAge();
+    };
+    onSaveClick = ()=>{
+        this.model.save();
+    };
+    template() {
+        return `
+            <div>
+                <input placeholder="${this.model.get("name")}"/>
+                <button class="set-name">Change Name</button>
+                <button class="set-age">Set Random Age</button>
+                <button class="save-model">Save User</button>
+            </div>
+        `;
+    }
+}
+
+},{"./View":"5Vo78","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2Tlyi":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "UserShow", ()=>UserShow);
+var _view = require("./View");
+class UserShow extends (0, _view.View) {
+    template() {
+        return `
+        <div>
+            <span>User Details</span>
+            <div>${this.model.get("name")}</div>
+            <div>${this.model.get("age")}</div>
+        <div>
+        `;
+    }
+}
+
+},{"./View":"5Vo78","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "User", ()=>User);
